@@ -1,8 +1,6 @@
 # Name:        tag-release.yaml
 # Author:      Mathew Fleisch <mathew.fleisch@gmail.com>
-# Description: This action will build a docker container that generates a go-binary
-#              as a build artifact. The go-binary is uploaded as a release asset,
-#              and the docker container is pushed to docker hub, when triggered by
+# Description: This action will build and push a docker container, when triggered by
 #              pushing a new git tag (that starts with the letter 'v').
 name: Release docker-dev-env
 on:
@@ -23,7 +21,7 @@ jobs:
           REGISTRY_APPNAME: ${{ secrets.REGISTRY_APPNAME }}
           GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
         run: |
-          echo "This action will build a docker container that generates a go-binary as a build artifact. The go-binary is uploaded as a release asset, and the docker container is pushed to docker hub, when triggered by pushing a new git tag (that starts with the letter 'v')."
+          echo "This action will build and push a docker container, when triggered by pushing a new git tag (that starts with the letter 'v')."
           echo "Check environment variables are set..."
           expected="REGISTRY_USERNAME REGISTRY_PASSWORD REGISTRY_URL REGISTRY_APPNAME GIT_TOKEN"
           for expect in $expected; do
@@ -42,38 +40,32 @@ jobs:
           # Build Dockerfile and use git tag as docker tag
           echo "Build docker container"
           docker build -t docker-dev-env-local .
-          # Create a release, if the go-binary was copied from the docker build
-          if [[ -f "$go_binary_filename" ]]; then
-            echo "Creating git release..."
-            # Build json with tag + commit message
-            curl_data='{"tag_name": "'$tag'", "target_commitish": "master", "name": "docker-dev-env-'$tag'", "body": "'$commit_message'", "draft": false, "prerelease": false}'
-            # Sanity check (does json render through jq)
-            echo "Data: $curl_data"
-            echo "$curl_data" | jq '.'
-            # Build, print and execute curl to create a new release with the github api 
-            curl_post="curl -sXPOST -H \"Content-Type: application/json\" -H \"Authorization: token $GIT_TOKEN\" --data '$curl_data' https://api.github.com/repos/mathew-fleisch/docker-dev-env/releases"
-            echo "curl: "
-            echo "$curl_post"
-            release_response="$(eval $curl_post)"
-            echo "Release Response: $release_response"
-            echo "$release_response" | jq '.'
-            # If the release was created, the json response will contain an id
-            release_id=$(echo "$release_response" | jq -r '.id')
-            echo "Release ID: $release_id"
-            if [[ -n $release_id ]]; then
-              echo "Login to container registry"
-              echo "$REGISTRY_PASSWORD" | docker login ${REGISTRY_URL} -u="$REGISTRY_USERNAME" --password-stdin
-              docker tag docker-dev-env-local ${REGISTRY_URL}/${REGISTRY_APPNAME}:${tag}
-              echo "Pushing docker container"
-              docker push ${REGISTRY_URL}/${REGISTRY_APPNAME}:${tag}
-              echo "Release complete: ${REGISTRY_URL}/${REGISTRY_APPNAME}:${tag}"
-              exit 0
-            else
-              echo "Could not get release id from response. Skip upload and docker push."
-              exit 1
-            fi
+          echo "Creating git release..."
+          # Build json with tag + commit message
+          curl_data='{"tag_name": "'$tag'", "target_commitish": "master", "name": "docker-dev-env-'$tag'", "body": "'$commit_message'", "draft": false, "prerelease": false}'
+          # Sanity check (does json render through jq)
+          echo "Data: $curl_data"
+          echo "$curl_data" | jq '.'
+          # Build, print and execute curl to create a new release with the github api
+          curl_post="curl -sXPOST -H \"Content-Type: application/json\" -H \"Authorization: token $GIT_TOKEN\" --data '$curl_data' https://api.github.com/repos/mathew-fleisch/docker-dev-env/releases"
+          echo "curl: "
+          echo "$curl_post"
+          release_response="$(eval $curl_post)"
+          echo "Release Response: $release_response"
+          echo "$release_response" | jq '.'
+          # If the release was created, the json response will contain an id
+          release_id=$(echo "$release_response" | jq -r '.id')
+          echo "Release ID: $release_id"
+          if [[ -n $release_id ]]; then
+            echo "Login to container registry"
+            echo "$REGISTRY_PASSWORD" | docker login ${REGISTRY_URL} -u="$REGISTRY_USERNAME" --password-stdin
+            docker tag docker-dev-env-local ${REGISTRY_URL}/${REGISTRY_APPNAME}:${tag}
+            echo "Pushing docker container"
+            docker push ${REGISTRY_URL}/${REGISTRY_APPNAME}:${tag}
+            echo "Release complete: ${REGISTRY_URL}/${REGISTRY_APPNAME}:${tag}"
+            exit 0
           else
-            echo "Go-binary was not found to release..."
+            echo "Could not get release id from response. Skip upload and docker push."
             exit 1
           fi
 
