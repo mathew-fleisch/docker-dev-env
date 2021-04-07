@@ -60,8 +60,10 @@ jobs:
             echo "Login to container registry"
             echo "$REGISTRY_PASSWORD" | docker login ${REGISTRY_URL} -u="$REGISTRY_USERNAME" --password-stdin
             docker tag docker-dev-env-local ${REGISTRY_URL}/${REGISTRY_APPNAME}:${tag}
+            docker tag docker-dev-env-local ${REGISTRY_URL}/${REGISTRY_APPNAME}:latest
             echo "Pushing docker container"
             docker push ${REGISTRY_URL}/${REGISTRY_APPNAME}:${tag}
+            docker push ${REGISTRY_URL}/${REGISTRY_APPNAME}:latest
             echo "Release complete: ${REGISTRY_URL}/${REGISTRY_APPNAME}:${tag}"
             exit 0
           else

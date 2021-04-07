@@ -6,7 +6,7 @@ ENV ASDF_DATA_DIR /opt/asdf
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh \
     && apt update \
     && apt upgrade -y \
-    && apt install -y curl wget lsb-release libssl-dev apt-transport-https ca-certificates iputils-ping apt-utils python3 python3-pip make build-essential openssl git vim  zip \
+    && apt install -y curl wget apt-utils python3 python3-pip make build-essential openssl lsb-release libssl-dev apt-transport-https ca-certificates iputils-ping git vim zip \
     && apt-get clean \
     && git clone https://github.com/asdf-vm/asdf.git ${ASDF_DATA_DIR} --branch v0.8.0 \
     && echo "export ASDF_DATA_DIR=${ASDF_DATA_DIR}" | tee -a /root/.bashrc \
