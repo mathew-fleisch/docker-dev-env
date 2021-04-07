@@ -61,38 +61,24 @@ function linuxrm() {
 
 ### Installed Tools
 
-Built on top of ubuntu:20.04 the apt repository is updated and upgraded before installation of additional tools.
+Built on top of [ubuntu:20.04](https://hub.docker.com/layers/ubuntu/library/ubuntu/20.04/images/sha256-b30065ff935c7761707eab66d3edc367e5fc1f3cc82c2e4addd69cee3b9e7c1c?context=explore) the apt repository is updated and upgraded before installation of additional tools.
 
-**apt**
+| apt | asdf |
+| ----------- | ----------- |
+| curl | awscli 2.1.32 |
+| wget | golang 1.16.2 |
+| apt-utils | helm 3.5.3 |
+| python3 | helmfile 0.138.7 |
+| python3-pip | k9s 0.24.6 |
+| make | kubectl 1.20.5 |
+| build-essential | kubectx 0.9.3 |
+| openssl | shellcheck 0.7.1 |
+| lsb-release | terraform 0.12.30 |
+| libssl-dev | terragrunt 0.28.18 |
+| apt-transport-https | tflint 0.25.0 |
+| ca-certificates | yq 4.0.0
+| iputils-ping
+| git
+| vim
+| zip
 
- - curl
- - wget
- - apt-utils
- - python3
- - python3-pip
- - make
- - build-essential
- - openssl
- - lsb-release
- - libssl-dev
- - apt-transport-https
- - ca-certificates
- - iputils-ping
- - git
- - vim
- - zip
-
-**asdf**
-
- - awscli 2.1.32
- - golang 1.16.2
- - helm 3.5.3
- - helmfile 0.138.7
- - k9s 0.24.6
- - kubectl 1.20.5
- - kubectx 0.9.3
- - shellcheck 0.7.1
- - terraform 0.12.30
- - terragrunt 0.28.18
- - tflint 0.25.0
- - yq 4.0.0
