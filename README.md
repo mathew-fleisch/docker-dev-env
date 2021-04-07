@@ -81,4 +81,3 @@ Built on top of [ubuntu:20.04](https://hub.docker.com/layers/ubuntu/library/ubun
 | git
 | vim
 | zip
-
