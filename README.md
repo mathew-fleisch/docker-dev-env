@@ -42,7 +42,7 @@ Built ontop of ubuntu:20.04
 
 ### Usage
 
-```
+```bash
 # Run from docker hub
 docker run -it --rm \
     -v /Users/$(whoami)/.vimrc:/root/.vimrc \
