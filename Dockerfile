@@ -12,13 +12,13 @@ RUN rm /bin/sh && ln -s /bin/bash /bin/sh \
     && echo "export ASDF_DATA_DIR=${ASDF_DATA_DIR}" | tee -a /root/.bashrc \
     && echo ". ${ASDF_DATA_DIR}/asdf.sh" | tee -a /root/.bashrc
 
-# Install asdf dependencies
+# Install asdf dependencies (use my fork of helm until my PR is merged for multi-arch support)
 WORKDIR /root
 COPY .tool-versions /root/.
 RUN . ${ASDF_DATA_DIR}/asdf.sh  \
     && asdf plugin add awscli \
     && asdf plugin add golang \
-    && asdf plugin add helm \
+    && asdf plugin add helm https://github.com/mathew-fleisch/asdf-helm.git \
     && asdf plugin add helmfile \
     && asdf plugin add jq \
     && asdf plugin add k9s \
