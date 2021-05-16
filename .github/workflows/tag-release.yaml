@@ -17,12 +17,12 @@ jobs:
         env:
           REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
           REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
-          REGISTRY_URL: ${{ secrets.REGISTRY_URL }}
-          REGISTRY_APPNAME: ${{ secrets.REGISTRY_APPNAME }}
           GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
         run: |
           echo "This action will build and push a docker container, when triggered by pushing a new git tag (that starts with the letter 'v')."
           echo "Check environment variables are set..."
+          REGISTRY_URL=docker.io
+          REGISTRY_APPNAME=mathewfleisch/docker-dev-env
           expected="REGISTRY_USERNAME REGISTRY_PASSWORD REGISTRY_URL REGISTRY_APPNAME GIT_TOKEN"
           for expect in $expected; do
             if [[ -z "${!expect}" ]]; then
@@ -37,9 +37,6 @@ jobs:
           # Get commit message for selected tag
           commit_message="$(git for-each-ref refs/tags/$tag --format='%(contents)' | head -n1)"
           # Container registry credentials stored as environment variables from github secrets
-          # Build Dockerfile and use git tag as docker tag
-          echo "Build docker container"
-          docker build -t docker-dev-env-local .
           echo "Creating git release..."
           # Build json with tag + commit message
           curl_data='{"tag_name": "'$tag'", "target_commitish": "master", "name": "docker-dev-env-'$tag'", "body": "'$commit_message'", "draft": false, "prerelease": false}'
@@ -57,18 +54,11 @@ jobs:
           release_id=$(echo "$release_response" | jq -r '.id')
           echo "Release ID: $release_id"
           if [[ -n $release_id ]]; then
-            echo "Login to container registries"
-            echo "$GIT_TOKEN" | docker login https://docker.pkg.github.com -u mathew-fleisch --password-stdin
+            echo "Login to container registry"
             echo "$REGISTRY_PASSWORD" | docker login ${REGISTRY_URL} -u="$REGISTRY_USERNAME" --password-stdin
-            docker tag docker-dev-env-local ${REGISTRY_URL}/${REGISTRY_APPNAME}:${tag}
-            docker tag docker-dev-env-local ${REGISTRY_URL}/${REGISTRY_APPNAME}:latest
-            docker tag docker-dev-env-local docker.pkg.github.com/mathew-fleisch/docker-dev-env/docker-dev-env:${tag}
-            docker tag docker-dev-env-local docker.pkg.github.com/mathew-fleisch/docker-dev-env/docker-dev-env:latest
-            echo "Pushing docker container to registries"
-            docker push ${REGISTRY_URL}/${REGISTRY_APPNAME}:${tag}
-            docker push ${REGISTRY_URL}/${REGISTRY_APPNAME}:latest
-            docker push docker.pkg.github.com/mathew-fleisch/docker-dev-env/docker-dev-env:${tag}
-            docker push docker.pkg.github.com/mathew-fleisch/docker-dev-env/docker-dev-env:latest
+            # Build Dockerfile and use git tag as docker tag
+            echo "Build docker container"
+            docker buildx build --platform linux/amd64,linux/arm64 -t $REGISTRY_APPNAME:$tag --push .
             echo "Release complete: ${REGISTRY_URL}/${REGISTRY_APPNAME}:${tag}"
             exit 0
           else
