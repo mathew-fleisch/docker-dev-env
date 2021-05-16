@@ -1,7 +1,7 @@
 FROM ubuntu:20.04
 LABEL maintainer="Mathew Fleisch <mathew.fleisch@gmail.com>"
 
-COPY getArch /usr/local/bin/getArch
+COPY scripts/getArch /usr/local/bin/getArch
 ENV ASDF_DATA_DIR /opt/asdf
 # Install apt dependencies
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh \
