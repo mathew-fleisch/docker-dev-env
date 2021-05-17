@@ -7,7 +7,7 @@ ENV ASDF_DATA_DIR /opt/asdf
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh \
     && apt update \
     && apt upgrade -y \
-    && apt install -y curl wget apt-utils python3 python3-pip make build-essential openssl lsb-release libssl-dev apt-transport-https ca-certificates iputils-ping git vim zip sudo binfmt-support qemu-user-static \
+    && DEBIAN_FRONTEND=noninteractive apt install -y curl wget apt-utils python3 python3-pip make build-essential openssl lsb-release libssl-dev apt-transport-https ca-certificates iputils-ping git vim jq zip sudo binfmt-support qemu-user-static \
     && curl -sSL https://get.docker.com/ | sh \
     && echo "%sudo ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
     && apt-get clean \
@@ -16,7 +16,6 @@ RUN rm /bin/sh && ln -s /bin/bash /bin/sh \
     && usermod -aG sudo github \
     && adduser github docker \
     && usermod -aG docker github \
-    && usermod -aG docker root \
     && python3 -m pip install --upgrade --force pip \
     && ln -s /usr/bin/python3 /usr/local/bin/python \
     && mkdir -p $ASDF_DATA_DIR \
