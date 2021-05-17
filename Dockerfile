@@ -31,7 +31,7 @@ RUN rm /bin/sh && ln -s /bin/bash /bin/sh \
     && docker buildx create --name mbuilder \
     && docker buildx use mbuilder \
     && docker buildx inspect --bootstrap
-
+USER root
 # Install asdf dependencies
 WORKDIR /root
 COPY .tool-versions /root/.
