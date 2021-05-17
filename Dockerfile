@@ -6,7 +6,6 @@ ENV ASDF_DATA_DIR /opt/asdf
 # Install apt dependencies
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh \
     && apt update \
-    && apt upgrade -y \
     && DEBIAN_FRONTEND=noninteractive apt install -y curl wget apt-utils python3 python3-pip make build-essential openssl lsb-release libssl-dev apt-transport-https ca-certificates iputils-ping git vim jq zip sudo binfmt-support qemu-user-static \
     && curl -sSL https://get.docker.com/ | sh \
     && echo "%sudo ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
@@ -14,11 +13,14 @@ RUN rm /bin/sh && ln -s /bin/bash /bin/sh \
     && apt-get dist-upgrade -u -y \
     && useradd -ms /bin/bash github \
     && usermod -aG sudo github \
+    && addgroup runners \
+    && adduser github runners \
     && adduser github docker \
     && usermod -aG docker github \
     && python3 -m pip install --upgrade --force pip \
     && ln -s /usr/bin/python3 /usr/local/bin/python \
     && mkdir -p $ASDF_DATA_DIR \
+    && chown -R github:runners $ASDF_DATA_DIR \
     && chmod -R g+w $ASDF_DATA_DIR \
     && git clone https://github.com/asdf-vm/asdf.git ${ASDF_DATA_DIR} --branch v0.8.0 \
     && echo "export ASDF_DATA_DIR=${ASDF_DATA_DIR}" | tee -a ~/.bashrc \
