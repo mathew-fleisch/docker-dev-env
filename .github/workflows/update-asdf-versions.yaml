@@ -27,6 +27,7 @@ jobs:
               exit 1
             fi
           done
+          rm -rf docker-dev-env
           git clone https://${GIT_TOKEN}:x-oauth-basic@github.com/mathew-fleisch/docker-dev-env.git
           pushd docker-dev-env
           pushd scripts
