@@ -31,7 +31,17 @@ jobs:
           pushd docker-dev-env/scripts
           wget https://raw.githubusercontent.com/fsaintjacques/semver-tool/master/src/semver
           chmod +x semver
+          echo "Update asdf versions..."
           ./update-asdf-versions.sh
-          sleep 1000
+          git status
+          git add ../.tool-versions
+          # Fetch all tags and set most recent as a variable
+          git fetch --prune --unshallow
+          currentTag=$(git describe --tags)
+          newTag=$(./semver bump patch $currentTag)
+          git commit -m "Automatically pulling newest asdf dependency versions and bumping this repo's version from v$currentTag to v$newTag"
+          git push origin main
+          git tag $newTag
+          git push origin $newTag
 
 
