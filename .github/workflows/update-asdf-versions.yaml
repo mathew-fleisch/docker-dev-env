@@ -7,7 +7,7 @@
 name: Update asdf versions
 on:
   schedule:
-    - cron:  '*/5 * * * *'
+    - cron:  '* * * * *'
 jobs:
   build:
     name: Update asdf versions
@@ -30,6 +30,8 @@ jobs:
           rm -rf docker-dev-env
           git clone https://${GIT_TOKEN}:x-oauth-basic@github.com/mathew-fleisch/docker-dev-env.git
           pushd docker-dev-env
+          git config --global user.email "mathew.fleisch@gmail.com"
+          git config --global user.name "mathew-fleisch"
           pushd scripts
           echo "Get semver tool"
           wget https://raw.githubusercontent.com/fsaintjacques/semver-tool/master/src/semver
