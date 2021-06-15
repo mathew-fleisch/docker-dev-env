@@ -22,7 +22,7 @@ RUN rm /bin/sh && ln -s /bin/bash /bin/sh \
     && mkdir -p $ASDF_DATA_DIR \
     && chown -R github:runners $ASDF_DATA_DIR \
     && chmod -R g+w $ASDF_DATA_DIR \
-    && git clone https://github.com/asdf-vm/asdf.git ${ASDF_DATA_DIR} --branch v0.8.0 \
+    && git clone https://github.com/asdf-vm/asdf.git ${ASDF_DATA_DIR} --branch v0.8.1 \
     && echo "export ASDF_DATA_DIR=${ASDF_DATA_DIR}" | tee -a ~/.bashrc \
     && echo ". ${ASDF_DATA_DIR}/asdf.sh" | tee -a ~/.bashrc \
     && mkdir -p ~/.docker/cli-plugins \
@@ -40,6 +40,7 @@ COPY pin /root/.
 COPY tests /root/tests
 RUN chmod a+x /root/scripts/*.sh \
     && . ${ASDF_DATA_DIR}/asdf.sh  \
+    && asdf update \
     && while IFS= read -r line; do dep=$(echo "$line" | sed 's/\ .*//g'); asdf plugin add $dep; done < .tool-versions \
     && asdf install
 

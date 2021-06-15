@@ -1,0 +1,37 @@
+# Name:        update-asdf-versions.yaml
+# Author:      Mathew Fleisch <mathew.fleisch@gmail.com>
+# Description: This action will iterate through the .tool-versions file
+#              and grab the latest version for each line, unless it is pinned
+#              in the pin file. If there are changes to the .tool-versions file
+#              the action will automatically tag a new version number.
+name: Update asdf versions
+on:
+  schedule:
+    - cron:  '30 5,17 * * *'
+jobs:
+  build:
+    name: Update asdf versions
+    runs-on: self-hosted
+    steps:
+      # - uses: actions/checkout@v2
+      - name: "Update asdf versions"
+        env:
+          GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
+        run: |
+          echo "This action will grab the latest versions for each tool listed in the .tool-versions file"
+          echo "Check environment variables are set..."
+          expected="GIT_TOKEN"
+          for expect in $expected; do
+            if [[ -z "${!expect}" ]]; then
+              echo "Missing Github Secret: $expect"
+              exit 1
+            fi
+          done
+          git clone https://${GIT_TOKEN}:x-oauth-basic@github.com/mathew-fleisch/docker-dev-env.git
+          pushd docker-dev-env/scripts
+          wget https://raw.githubusercontent.com/fsaintjacques/semver-tool/master/src/semver
+          chmod +x semver
+          ./update-asdf-versions.sh
+          sleep 1000
+
+
