@@ -10,20 +10,25 @@ while IFS= read -r line; do
   dep=$(echo "$line" | sed 's/\ .*//g')
   installed=$(echo "$line" | sed 's/.*\ //g')
   latest=$(asdf latest $dep)
-  if [[ "$installed" =~ "$latest" ]]; then
-    echo "$dep already at latest $latest"
-    echo "$dep $installed" >> updated
-  else
+  if [[ -z "$(cat updated | grep $dep)" ]]; then
     if [[ -z "$(cat ../pin | grep $dep)" ]]; then
-      echo "Updating $dep from $installed to $latest"
-      echo "$dep $latest" >> updated
+      if [[ "$installed" =~ "$latest" ]]; then
+        echo "$dep already at latest $latest"
+        echo "$dep $installed" >> updated
+      else
+        echo "Updating $dep from $installed to $latest"
+        echo "$dep $latest" >> updated
+      fi
     else
-      echo "$dep pinned to $latest"
-      echo "$dep $installed" >> updated
+      pinned=$(cat ../pin | grep $dep)
+      echo "Pinned versions:"
+      echo "$pinned"
+      echo "$pinned" >> updated
     fi
   fi
 done < ../.tool-versions
-mv updated ../.tool-versions
+cat updated | sort | uniq > ../.tool-versions
+rm updated
 echo "--------------------------"
 echo "To apply run: asdf install"
 echo "--------------------------"
