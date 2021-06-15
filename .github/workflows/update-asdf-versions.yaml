@@ -30,8 +30,6 @@ jobs:
           git clone https://${GIT_TOKEN}:x-oauth-basic@github.com/mathew-fleisch/docker-dev-env.git
           pushd docker-dev-env
           pushd scripts
-          # Fetch all tags and set most recent as a variable
-          git fetch --prune --unshallow
           currentTag=$(git describe --tags)
           newTag=$(./semver bump patch $currentTag)
           wget https://raw.githubusercontent.com/fsaintjacques/semver-tool/master/src/semver
