@@ -31,8 +31,7 @@ jobs:
           git clone https://${GIT_TOKEN}:x-oauth-basic@github.com/mathew-fleisch/docker-dev-env.git
           pushd docker-dev-env
           pushd scripts
-          currentTag=$(git describe --tags)
-          newTag=$(./semver bump patch $currentTag)
+          echo "Get semver tool"
           wget https://raw.githubusercontent.com/fsaintjacques/semver-tool/master/src/semver
           chmod +x semver
           echo "Update asdf versions..."
@@ -42,6 +41,8 @@ jobs:
           git add .tool-versions
           git commit -m "Automatically pulling newest asdf dependency versions and bumping this repo's version from v$currentTag to v$newTag"
           git push origin main
+          currentTag=$(git describe --tags)
+          newTag=$(./semver bump patch $currentTag)
           git tag $newTag
           git push origin $newTag
           popd
