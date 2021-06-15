@@ -7,7 +7,8 @@
 name: Update asdf versions
 on:
   schedule:
-    - cron:  '* * * * *'
+    - cron:  '0 17 * * *'
+    # - cron:  '* * * * *'
 jobs:
   build:
     name: Update asdf versions
