@@ -42,7 +42,7 @@ jobs:
           git commit -m "Automatically pulling newest asdf dependency versions and bumping this repo's version from v$currentTag to v$newTag"
           git push origin main
           currentTag=$(git describe --tags)
-          newTag=$(./semver bump patch $currentTag)
+          newTag=$(./scripts/semver bump patch $currentTag)
           git tag $newTag
           git push origin $newTag
           popd
