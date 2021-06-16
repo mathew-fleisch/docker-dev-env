@@ -7,8 +7,8 @@
 name: Update asdf versions
 on:
   schedule:
-    - cron:  '0 17 * * *'
-    # - cron:  '* * * * *'
+    # - cron:  '0 17 * * *'
+    - cron:  '*/10 * * * *'
 jobs:
   build:
     name: Update asdf versions
@@ -33,6 +33,7 @@ jobs:
           pushd docker-dev-env
           git config --global user.email "mathew.fleisch@gmail.com"
           git config --global user.name "mathew-fleisch"
+          cp .tool-versions .tool-versions-orig
           pushd scripts
           echo "Get semver tool"
           wget https://raw.githubusercontent.com/fsaintjacques/semver-tool/master/src/semver
@@ -40,14 +41,20 @@ jobs:
           echo "Update asdf versions..."
           ./update-asdf-versions.sh
           popd
-          git status
-          git add .tool-versions
-          git commit -m "Automatically pulling newest asdf dependency versions and bumping this repo's version from v$currentTag to v$newTag"
-          git push origin main
-          currentTag=$(git describe --tags)
-          newTag=$(./scripts/semver bump patch $currentTag)
-          git tag $newTag
-          git push origin $newTag
+          # If diff returns a result, there are updates that need to be pushed
+          if [[ -n "$(diff .tool-versions .tool-versions-orig)" ]]; then
+            rm -rf .tool-versions-orig
+            git status
+            git add .tool-versions
+            git commit -m "Get new dependency versions (asdf)"
+            git push origin main
+            currentTag=$(git describe --tags)
+            newTag=$(./scripts/semver bump patch $currentTag)
+            git tag "v${newTag}"
+            git push origin "v${newTag}"
+          else
+            echo "There were no updates to asdf dependencies. Do nothing."
+          fi
           popd
 
 
