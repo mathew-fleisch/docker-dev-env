@@ -7,14 +7,12 @@
 name: Update asdf versions
 on:
   schedule:
-    # - cron:  '0 17 * * *'
     - cron:  '*/10 * * * *'
 jobs:
   build:
     name: Update asdf versions
     runs-on: self-hosted
     steps:
-      # - uses: actions/checkout@v2
       - name: "Update asdf versions"
         env:
           GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
