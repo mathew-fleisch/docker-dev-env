@@ -6,8 +6,8 @@
 #              the action will automatically tag a new version number.
 name: Update asdf versions
 on:
-  schedule:
-    - cron:  '*/10 * * * *'
+  schedule: # trigger daily at 11:20am PT (18:20UTC)
+    - cron:  '20 18 * * *'
 jobs:
   build:
     name: Update asdf versions
