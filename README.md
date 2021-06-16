@@ -1,7 +1,7 @@
 # Docker Development Environment
 
 [![Release CI: multi-arch container build & push](https://github.com/mathew-fleisch/docker-dev-env/actions/workflows/tag-release.yaml/badge.svg)](actions/workflows/tag-release.yaml)
-[![Update CI: asdf dependency versions](https://github.com/mathew-fleisch/docker-dev-env/actions/workflows/update-asdf-versions.yaml/badge.svg)(actions/workflows/update-asdf-versions.yaml)
+[![Update CI: asdf dependency versions](https://github.com/mathew-fleisch/docker-dev-env/actions/workflows/update-asdf-versions.yaml/badge.svg)](actions/workflows/update-asdf-versions.yaml)
 
 A container definition that will act as a local development environment
 
