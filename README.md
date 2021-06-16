@@ -1,5 +1,7 @@
 # Docker Development Environment
 
+![Release CI (multi-arch container build & push)](https://github.com/mathew-fleisch/docker-dev-env/actions/workflows/tag-release.yaml/badge.svg)
+
 A container definition that will act as a local development environment
 
 <img src="https://i.imgur.com/AGLznZ4.gif" width="100%" />
