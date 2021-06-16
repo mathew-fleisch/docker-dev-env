@@ -2,7 +2,8 @@
 
 [![Release CI: multi-arch container build & push](https://github.com/mathew-fleisch/docker-dev-env/actions/workflows/tag-release.yaml/badge.svg)](https://github.com/mathew-fleisch/docker-dev-env/actions/workflows/tag-release.yaml)
 [![Update CI: asdf dependency versions](https://github.com/mathew-fleisch/docker-dev-env/actions/workflows/update-asdf-versions.yaml/badge.svg)](https://github.com/mathew-fleisch/docker-dev-env/actions/workflows/update-asdf-versions.yaml)
-[![Docker](https://img.shields.io/docker/cloud/build/mathew-fleisch/docker-dev-env?label=Docker&style=flat)](https://hub.docker.com/r/mathewfleisch/docker-dev-env/builds)
+
+
 A container definition that will act as a local development environment
 
 <img src="https://i.imgur.com/AGLznZ4.gif" width="100%" />
