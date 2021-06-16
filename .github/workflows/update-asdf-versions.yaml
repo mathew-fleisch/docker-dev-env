@@ -46,14 +46,17 @@ jobs:
           popd
           # If diff returns a result, there are updates that need to be pushed
           if [[ -n "$(diff .tool-versions .tool-versions-orig)" ]]; then
+            rm -rf .tool-versions-orig
             git status
             git add .tool-versions
-            git commit -m "Automatically pulling newest asdf dependency versions and bumping this repo's version from v$currentTag to v$newTag"
+            git commit -m "Get new dependency versions (asdf)"
             git push origin main
             currentTag=$(git describe --tags)
             newTag=$(./scripts/semver bump patch $currentTag)
             git tag $newTag
             git push origin $newTag
+          else
+            echo "There were no updates to asdf dependencies."
           fi
           popd
 
