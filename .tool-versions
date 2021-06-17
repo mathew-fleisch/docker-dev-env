@@ -1,4 +1,5 @@
 awscli 2.2.12
+bat 0.18.1
 bats v1.3.0
 dust 0.5.4
 fzf 0.27.2
