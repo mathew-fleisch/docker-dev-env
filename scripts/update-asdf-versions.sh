@@ -4,14 +4,26 @@ if ! [[ -f ../.tool-versions ]]; then
   echo "Missing ../.tool-versions file"
   exit 1
 fi
+echo "Ensure host has plugins installed to grab latest versions"
+while IFS= read -r line; do 
+  dep=$(echo "$line" | sed 's/\ .*//g')
+  asdf plugin add $dep
+done < ../.tool-versions
 touch ../pin
 touch updated
 while IFS= read -r line; do
   dep=$(echo "$line" | sed 's/\ .*//g')
   installed=$(echo "$line" | sed 's/.*\ //g')
+  echo "----------------------"
+  echo "Current Version: $dep $installed"
   latest=$(asdf latest $dep)
-  if [[ -z "$(cat updated | grep $dep)" ]]; then
-    if [[ -z "$(cat ../pin | grep $dep)" ]]; then
+  echo " Latest Version: $dep $latest"
+  if [[ -z "$latest" ]]; then
+    echo "Could not get latest version for $dep. Pinning to $installed"
+    echo "$dep $installed" >> updated
+  fi
+  if [[ -z "$(cat updated | grep "$dep ")" ]]; then
+    if [[ -z "$(cat ../pin | grep "$dep ")" ]]; then
       if [[ "$installed" =~ "$latest" ]]; then
         echo "$dep already at latest $latest"
         echo "$dep $installed" >> updated

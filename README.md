@@ -13,10 +13,10 @@ A container definition that will act as a local development environment
 ```bash
 # Run from docker hub
 docker run -it --rm \
-    -v /Users/$(whoami)/.kube:/root/.kube \
-    -v /Users/$(whoami)/.ssh:/root/.ssh \
-    -v /Users/$(whoami)/.aliases:/root/.bash_aliases \
-    -v /Users/$(whoami)/src:/root/src \
+    -v /Users/$USER/.kube:/root/.kube \
+    -v /Users/$USER/.ssh:/root/.ssh \
+    -v /Users/$USER/.aliases:/root/.bash_aliases \
+    -v /Users/$USER/src:/root/src \
     --name docker-dev-env \
     mathewfleisch/docker-dev-env:latest
 
@@ -29,37 +29,19 @@ docker build -t docker-dev-env .
 
 # Run (local) container
 docker run -it --rm \
-    -v /Users/$(whoami)/.kube:/root/.kube \
-    -v /Users/$(whoami)/.ssh:/root/.ssh \
-    -v /Users/$(whoami)/.aliases:/root/.bash_aliases \
-    -v /Users/$(whoami)/src:/root/src \
+    -v /Users/$USER/.kube:/root/.kube \
+    -v /Users/$USER/.ssh:/root/.ssh \
+    -v /Users/$USER/.aliases:/root/.bash_aliases \
+    -v /Users/$USER/src:/root/src \
     --name docker-dev-env \
     docker-dev-env:latest
 
----------------------------------------------------------------------
+```
 
-# zshrc/bashrc aliases
-function linux() {
-  container_name=docker-dev-env
-  container_id=$(docker ps -aqf "name=$container_name")
-  if [[ -z "$container_id" ]]; then
-    container_id=$(docker run -dit \
-      -v /Users/$(whoami)/.kube:/root/.kube \
-      -v /Users/$(whoami)/.ssh:/root/.ssh \
-      -v /Users/$(whoami)/.aliases:/root/.bash_aliases \
-      -v /Users/$(whoami)/src:/root/src \
-      --name $container_name \
-      mathewfleisch/docker-dev-env:latest)
-  fi
-  docker exec -it $container_id bash
-}
-function linuxrm() {
-  container_name=docker-dev-env
-  container_id=$(docker ps -aqf "name=$container_name")
-  if [[ -n "$container_id" ]]; then
-    echo "Removing container: $(docker rm -f $container_id)"
-  fi
-}
+Or by sourcing helper in bashrc/bash_profile
+
+```bash
+cat scripts/docker-dev-env-start.sh >> $HOME/.bashrc
 ```
 
 ### Installed Tools
@@ -67,11 +49,20 @@ function linuxrm() {
 Built on top of [ubuntu:20.04](https://hub.docker.com/layers/ubuntu/library/ubuntu/20.04/images/sha256-b30065ff935c7761707eab66d3edc367e5fc1f3cc82c2e4addd69cee3b9e7c1c?context=explore) the apt repository is updated and upgraded before installation of additional tools. See [Dockerfile](Dockerfile) and [.tool-versions](.tool-versions) to see the tools that are installed in this container.
 
 
-#### Updates and Tests
+### Automation
 
-The asdf tool makes it easy to install multiple versions of the same tool and switch between the versions with another asdf command. There are also some helper scripts added to update/pin the versions of tools asdf installs.
+There are [two github-action jobs](https://github.com/mathew-fleisch/docker-dev-env/actions) set up to build, push and update the container and dependencies baked into the container. These jobs are configured to run on self-hosted runners and will use the plugin, dockerx, to build multi-arch containers.
+
+***[Release on git tags (tag-release.yaml)](.github/workflows/tag-release.yaml)***
+
+The main branch is used to `git tag` stable versions and trigger a build+push to docker hub.
 
 ```bash
-
+git tag v1.0.0
+git push origin v1.0.0
 ```
+
+***[Automatic dependency updates (update-asdf-versions.yaml)](.github/workflows/update-asdf-versions.yaml)***
+
+This github action is triggered via [cron](.github/workflows/update-asdf-versions.yaml#L10) will use asdf to update the versions in [.tool-versions](.tool-versions), ignoring those tools pinned in [pin](pin), and trigger a new `git tag` patch, if [.tool-versions](.tool-versions) changes (the tag triggers the [tag-release.yaml](.github/workflows/tag-release.yaml) action).
 
