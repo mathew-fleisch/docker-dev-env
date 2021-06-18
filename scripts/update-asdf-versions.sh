@@ -32,7 +32,7 @@ while IFS= read -r line; do
         echo "$dep $latest" >> updated
       fi
     else
-      pinned=$(cat ../pin | grep $dep)
+      pinned=$(cat ../pin | grep "$dep ")
       echo "Pinned versions:"
       echo "$pinned"
       echo "$pinned" >> updated

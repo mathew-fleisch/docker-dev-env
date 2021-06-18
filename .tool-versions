@@ -15,3 +15,4 @@ terraform 0.12.30
 terraform 1.0.0
 terragrunt 0.30.6
 tflint 0.29.1
+yq v4.9.3
