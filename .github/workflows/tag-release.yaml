@@ -39,7 +39,7 @@ jobs:
           # Container registry credentials stored as environment variables from github secrets
           echo "Creating git release..."
           # Build json with tag + commit message
-          curl_data='{"tag_name": "'$tag'", "target_commitish": "master", "name": "docker-dev-env-'$tag'", "body": "'$commit_message'", "draft": false, "prerelease": false}'
+          curl_data='{"tag_name": "'$tag'", "target_commitish": "main", "name": "docker-dev-env-'$tag'", "body": "'$commit_message'", "draft": false, "prerelease": false}'
           # Sanity check (does json render through jq)
           echo "Data: $curl_data"
           echo "$curl_data" | jq '.'
@@ -53,7 +53,7 @@ jobs:
           # If the release was created, the json response will contain an id
           release_id=$(echo "$release_response" | jq -r '.id')
           echo "Release ID: $release_id"
-          if [[ -n $release_id ]]; then
+          if [[ -n $release_id ]] && [[ "$release_id" != "null" ]]; then
             echo "Login to container registry"
             echo "$REGISTRY_PASSWORD" | docker login ${REGISTRY_URL} -u="$REGISTRY_USERNAME" --password-stdin
             # Build Dockerfile and use git tag as docker tag
