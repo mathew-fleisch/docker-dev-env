@@ -14,9 +14,15 @@ function linux() {
     | sed -e 's/.*\ \"v\(.*\)\",.*$/v\1/g' \
     | head -1)
   if [[ -z $(docker images | grep $container_name | awk '{print $2}' | grep $latest_version) ]]; then
-    echo "Downloading latest version: $latest_version"
-    linuxrm
-    docker images | grep $container_name | awk '{print $3}' | xargs -I {} docker rmi -f {}
+    read -p "Download latest version $latest_version and remove current? " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]
+      echo "Downloading latest version: $latest_version"
+      linuxrm
+      docker images | grep $container_name | awk '{print $3}' | xargs -I {} docker rmi -f {}
+    then
+        echo "Skipping latest version $latest_version for now..."
+    fi
   fi
 
   container_id=$(docker ps -aqf "name=$container_name")
