@@ -62,6 +62,8 @@ git tag v1.0.0
 git push origin v1.0.0
 ```
 
+On new major/minor versions of of this tag, the apt dependencies will be upgraded, and on patches, asdf dependencies will be upgraded.
+
 ***[Automatic dependency updates (update-asdf-versions.yaml)](.github/workflows/update-asdf-versions.yaml)***
 
 This github action is triggered via [cron](.github/workflows/update-asdf-versions.yaml#L10) will use asdf to update the versions in [.tool-versions](.tool-versions), ignoring those tools pinned in [pin](pin), and trigger a new `git tag` patch, if [.tool-versions](.tool-versions) changes (the tag triggers the [tag-release.yaml](.github/workflows/tag-release.yaml) action).
