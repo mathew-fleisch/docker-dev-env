@@ -77,14 +77,14 @@ jobs:
                 --platform linux/amd64,linux/arm64 \
                 -t ${REGISTRY_APPNAME}-base:$tag \
                 -t ${REGISTRY_APPNAME}-base:latest \
-                --push Dockerfile.base
+                --push -f ./Dockerfile.base .
             fi
             echo "Build + push multi-arch docker container"
             docker buildx build \
               --platform linux/amd64,linux/arm64 \
               -t $REGISTRY_APPNAME:$tag \
               -t $REGISTRY_APPNAME:latest \
-              --push Dockerfile
+              --push .
             echo "Release complete: ${REGISTRY_URL}/${REGISTRY_APPNAME}:${tag}"
             exit 0
           else
