@@ -35,18 +35,8 @@ jobs:
           chmod +x semver
           # Fetch all tags and set most recent as a variable
           git fetch --prune --unshallow
-          prevTag=$(git tag --list | sort -Vr | head -1)
-          prevPrevTag=$(git tag --list | sort -Vr | head -2 | tail -1)
+          lastTag=$(git tag --list | sort -Vr | head -2 | tail -1)
           tag=$(git describe --tags)
-          if [[ -z "$(./semver diff $tag $prevTag)" ]]; then
-            echo "prevTag:$prevTag == tag:$tag"
-            echo "Use prevPrevTag to compare"
-            lastTag="$prevPrevTag"
-          else
-            echo "prevTag:$prevTag != tag:$tag"
-            echo "Use prevTag to compare"
-            lastTag="$prevTag"
-          fi
           bump=$(./semver diff $lastTag $tag)
           # Get commit message for selected tag
           commit_message="$(git for-each-ref refs/tags/$tag --format='%(contents)' | head -n1)"
