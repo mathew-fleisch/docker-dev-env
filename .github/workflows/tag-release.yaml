@@ -31,9 +31,23 @@ jobs:
               exit 1
             fi
           done
+          wget https://raw.githubusercontent.com/fsaintjacques/semver-tool/master/src/semver
+          chmod +x semver
           # Fetch all tags and set most recent as a variable
           git fetch --prune --unshallow
+          prevTag=$(git tag --list | sort -Vr | head -1)
+          prevPrevTag=$(git tag --list | sort -Vr | head -2 | tail -1)
           tag=$(git describe --tags)
+          if [[ -z "$(./semver diff $tag $prevTag)" ]]; then
+            echo "prevTag:$prevTag == tag:$tag"
+            echo "Use prevPrevTag to compare"
+            lastTag="$prevPrevTag"
+          else
+            echo "prevTag:$prevTag != tag:$tag"
+            echo "Use prevTag to compare"
+            lastTag="$prevTag"
+          fi
+          bump=$(./semver diff $lastTag $tag)
           # Get commit message for selected tag
           commit_message="$(git for-each-ref refs/tags/$tag --format='%(contents)' | head -n1)"
           # Container registry credentials stored as environment variables from github secrets
@@ -57,8 +71,20 @@ jobs:
             echo "Login to container registry"
             echo "$REGISTRY_PASSWORD" | docker login ${REGISTRY_URL} -u="$REGISTRY_USERNAME" --password-stdin
             # Build Dockerfile and use git tag as docker tag
-            echo "Build docker container"
-            docker buildx build --platform linux/amd64,linux/arm64 -t $REGISTRY_APPNAME:$tag --push .
+            if [[ "$bump" =~ "major" ]] || [[ "$bump" =~ "minor" ]]; then
+              echo "Build + push multi-arch docker container (base)"
+              docker buildx build \
+                --platform linux/amd64,linux/arm64 \
+                -t ${REGISTRY_APPNAME}-base:$tag \
+                -t ${REGISTRY_APPNAME}-base:latest \
+                --push Dockerfile.base
+            fi
+            echo "Build + push multi-arch docker container"
+            docker buildx build \
+              --platform linux/amd64,linux/arm64 \
+              -t $REGISTRY_APPNAME:$tag \
+              -t $REGISTRY_APPNAME:latest \
+              --push Dockerfile
             echo "Release complete: ${REGISTRY_URL}/${REGISTRY_APPNAME}:${tag}"
             exit 0
           else
