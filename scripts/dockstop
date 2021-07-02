@@ -1,0 +1,7 @@
+#!/bin/bash
+
+container_name=docker-dev-env
+container_id=$(docker ps -aqf "name=$container_name")
+if [[ -n "$container_id" ]]; then
+  echo "Removing container: $(docker rm -f $container_id)"
+fi

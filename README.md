@@ -10,6 +10,19 @@ A container definition that will act as a local development environment
 
 ### Usage
 
+***Quick start: Add start/stop helper scripts to /usr/local/bin***
+
+```bash
+wget https://raw.githubusercontent.com/mathew-fleisch/docker-dev-env/main/scripts/dockstart -P /usr/local/bin
+wget https://raw.githubusercontent.com/mathew-fleisch/docker-dev-env/main/scripts/dockstop -P /usr/local/bin
+chmod +x /usr/local/bin/dockstart
+chmod +x /usr/local/bin/dockstop
+dockstart
+```
+
+Or, you can run the container from docker hub
+
+
 ```bash
 # Run from docker hub
 docker run -it --rm \
@@ -38,11 +51,6 @@ docker run -it --rm \
 
 ```
 
-Or by sourcing helper in bashrc/bash_profile
-
-```bash
-cat scripts/docker-dev-env-start.sh >> $HOME/.bashrc
-```
 
 ### Installed Tools
 
