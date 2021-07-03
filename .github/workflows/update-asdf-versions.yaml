@@ -7,7 +7,7 @@
 name: Update asdf versions
 on:
   schedule: # trigger daily at 11:20am PT (18:20UTC)
-    - cron:  '20 18 * * *'
+    - cron: '10 23 * * *'
 jobs:
   build:
     name: Update asdf versions
