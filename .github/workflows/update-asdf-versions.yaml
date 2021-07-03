@@ -7,7 +7,7 @@
 name: Update asdf versions
 on:
   schedule: # trigger daily at 11:20am PT (18:20UTC)
-    - cron: '10 23 * * *'
+    - cron: '45 23 * * *'
 jobs:
   build:
     name: Update asdf versions
@@ -15,6 +15,7 @@ jobs:
     steps:
       - name: "Update asdf versions"
         env:
+          REPO_EMAIL: ${{ secrets.REPO_EMAIL }}
           GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
         run: |
           export REPO_OWNER=mathew-fleisch
