@@ -17,42 +17,9 @@ jobs:
         env:
           GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
         run: |
-          echo "This action will grab the latest versions for each tool listed in the .tool-versions file"
-          echo "Check environment variables are set..."
-          expected="GIT_TOKEN"
-          for expect in $expected; do
-            if [[ -z "${!expect}" ]]; then
-              echo "Missing Github Secret: $expect"
-              exit 1
-            fi
-          done
-          rm -rf docker-dev-env
-          git clone https://${GIT_TOKEN}:x-oauth-basic@github.com/mathew-fleisch/docker-dev-env.git
-          pushd docker-dev-env
-          git config --global user.email "mathew.fleisch@gmail.com"
-          git config --global user.name "mathew-fleisch"
-          cp .tool-versions .tool-versions-orig
-          pushd scripts
-          echo "Get semver tool"
-          wget https://raw.githubusercontent.com/fsaintjacques/semver-tool/master/src/semver
-          chmod +x semver
-          echo "Update asdf versions..."
-          ./update-asdf-versions.sh
-          popd
-          # If diff returns a result, there are updates that need to be pushed
-          if [[ -n "$(diff .tool-versions .tool-versions-orig)" ]]; then
-            rm -rf .tool-versions-orig
-            git status
-            git add .tool-versions
-            git commit -m "Get new dependency versions (asdf)"
-            git push origin main
-            currentTag=$(git describe --tags)
-            newTag=$(./scripts/semver bump patch $currentTag)
-            git tag "v${newTag}"
-            git push origin "v${newTag}"
-          else
-            echo "There were no updates to asdf dependencies. Do nothing."
-          fi
-          popd
+          export REPO_OWNER=mathew-fleisch
+          export REPO_NAME=docker-dev-env
+          export BRANCH=main
+          wget -qO- https://raw.githubusercontent.com/mathew-fleisch/tools/main/scripts/update-asdf-to-latest.sh | bash
 
 

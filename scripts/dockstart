@@ -7,7 +7,6 @@ latest_version=$(curl -s -H "Authorization: token $GIT_TOKEN" "https://api.githu
   | head -1)
 if [[ -z $(docker images | grep $container_name | awk '{print $2}' | grep $latest_version) ]]; then
   read -p "Download latest version $latest_version and remove current? " REPLY
-  echo $REPLY
   if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo "Downloading latest version: $latest_version"
     dockstop
