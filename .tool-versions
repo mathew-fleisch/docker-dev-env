@@ -10,6 +10,7 @@ k9s 0.24.13
 kubectl 1.21.2
 kubectx 0.9.3
 kustomize 4.2.0
+rclone 1.55.1
 shellcheck 0.7.2
 terraform 0.12.30
 terraform latest
