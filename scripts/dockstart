@@ -33,11 +33,12 @@ fi
 container_id=$(docker ps -aqf "name=$container_name")
 if [[ -z "$container_id" ]]; then
   container_id=$(docker run -dit --rm \
-    -v /Users/$USER/.kube:/root/.kube \
-    -v /Users/$USER/.ssh:/root/.ssh \
-    -v /Users/$USER/.aliases:/root/.bash_aliases \
-    -v /Users/$USER/src:/root/src \
+    -v $HOME/.kube:/root/.kube \
+    -v $HOME/.ssh:/root/.ssh \
+    -v $HOME/.aws:/root/.aws \
+    -v $HOME/src:/root/src \
     --name $container_name \
     mathewfleisch/docker-dev-env:$latest_version)
 fi
+
 docker exec -it $container_id bash
