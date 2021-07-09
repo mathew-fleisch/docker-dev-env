@@ -1,19 +1,14 @@
 #!/bin/bash
-
+#shellcheck disable=SC2143,SC2086
 container_name=docker-dev-env
 if [[ -z "$GIT_TOKEN" ]]; then
-  latest_version=$(curl -s "https://api.github.com/repos/mathew-fleisch/docker-dev-env/tags" \
-    | grep name \
-    | sed -e 's/.*\ \"v\(.*\)\",.*$/v\1/g' \
-    | head -1)
+  latest_version=$(curl -s "https://api.github.com/repos/mathew-fleisch/docker-dev-env/tags")
 else
-    latest_version=$(curl -s -H "Authorization: token $GIT_TOKEN" "https://api.github.com/repos/mathew-fleisch/docker-dev-env/tags" \
-    | grep name \
-    | sed -e 's/.*\ \"v\(.*\)\",.*$/v\1/g' \
-    | head -1)
+    latest_version=$(curl -s -H "Authorization: token $GIT_TOKEN" "https://api.github.com/repos/mathew-fleisch/docker-dev-env/tags")
 fi
+latest_version=$(echo "$latest_version" | grep name | sed -e 's/.*\ \"v\(.*\)\",.*$/v\1/g' | head -1)
 if [[ -z $(docker images | grep $container_name | awk '{print $2}' | grep $latest_version) ]]; then
-  read -p "Download latest version $latest_version and remove current? " REPLY
+  read -rp "Download latest version $latest_version and remove current? " REPLY
   if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo "Downloading latest version: $latest_version"
     dockstop
