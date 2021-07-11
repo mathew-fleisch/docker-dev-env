@@ -13,8 +13,8 @@ A container definition that will act as a local development environment
 ***Quick start: Add start/stop helper scripts to /usr/local/bin***
 
 ```bash
-wget https://raw.githubusercontent.com/mathew-fleisch/docker-dev-env/main/scripts/dockstart -P /usr/local/bin
-wget https://raw.githubusercontent.com/mathew-fleisch/docker-dev-env/main/scripts/dockstop -P /usr/local/bin
+wget https://raw.githubusercontent.com/mathew-fleisch/docker-dev-env/main/scripts/dockstart -q -O /usr/local/bin/dockstart
+wget https://raw.githubusercontent.com/mathew-fleisch/docker-dev-env/main/scripts/dockstop -q -O /usr/local/bin/dockstop
 chmod +x /usr/local/bin/dockstart
 chmod +x /usr/local/bin/dockstop
 dockstart
@@ -26,10 +26,10 @@ Or, you can run the container from docker hub
 ```bash
 # Run from docker hub
 docker run -it --rm \
-    -v /Users/$USER/.kube:/root/.kube \
-    -v /Users/$USER/.ssh:/root/.ssh \
-    -v /Users/$USER/.aliases:/root/.bash_aliases \
-    -v /Users/$USER/src:/root/src \
+    -v $HOME/.kube:/root/.kube \
+    -v $HOME/.ssh:/root/.ssh \
+    -v $HOME/.aws:/root/.aws \
+    -v $HOME/src:/root/src \
     --name docker-dev-env \
     mathewfleisch/docker-dev-env:latest
 
@@ -42,10 +42,10 @@ docker build -t docker-dev-env .
 
 # Run (local) container
 docker run -it --rm \
-    -v /Users/$USER/.kube:/root/.kube \
-    -v /Users/$USER/.ssh:/root/.ssh \
-    -v /Users/$USER/.aliases:/root/.bash_aliases \
-    -v /Users/$USER/src:/root/src \
+    -v $HOME/.kube:/root/.kube \
+    -v $HOME/.ssh:/root/.ssh \
+    -v $HOME/.aws:/root/.aws \
+    -v $HOME/src:/root/src \
     --name docker-dev-env \
     docker-dev-env:latest
 
@@ -59,7 +59,7 @@ Built on top of [ubuntu:20.04](https://hub.docker.com/layers/ubuntu/library/ubun
 
 ### Automation
 
-There are [two github-action jobs](https://github.com/mathew-fleisch/docker-dev-env/actions) set up to build, push and update the container and dependencies baked into the container. These jobs are configured to run on self-hosted runners and will use the plugin, dockerx, to build multi-arch containers.
+There are [two github-action jobs](https://github.com/mathew-fleisch/docker-dev-env/actions) set up to build, push and update the container and dependencies baked into the container. These jobs are configured to run on self-hosted runners and will use the docker plugin, buildx, to build multi-arch containers.
 
 ***[Release on git tags (tag-release.yaml)](.github/workflows/tag-release.yaml)***
 
