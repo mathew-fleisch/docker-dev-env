@@ -1,4 +1,5 @@
 #!/bin/bash
+#shellcheck disable=SC2143,SC2086
 
 container_name=docker-dev-env
 container_id=$(docker ps -aqf "name=$container_name")
