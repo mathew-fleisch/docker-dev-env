@@ -3,6 +3,7 @@ bat 0.18.1
 bats v1.3.0
 dust 0.6.0
 fzf 0.27.2
+gcloud 347.0.0
 golang 1.16.5
 helm 3.6.2
 helmfile 0.139.9
