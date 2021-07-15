@@ -6,10 +6,11 @@ if ! [[ -f ../.tool-versions ]]; then
 fi
 
 while IFS= read -r line; do
-  dep=$(echo "$line" | sed 's/\ .*//g')
-  expected=$(echo "$line" | sed 's/.*\ //g')
-  actual=$(./versions/$dep.sh)
-#   echo "$dep: $expected : $actual"
+  dep=$(echo "$line" | awk '{print $1}' | tr '[[:upper:]]' '[[:lower:]]' | sed -e 's/v\([0-9]*\.[0-9]*\.[0-9]*\).*/\1/')
+  expected=$(echo "$line" | awk '{print $2}' | tr '[[:upper:]]' '[[:lower:]]' | sed -e 's/v\([0-9]*\.[0-9]*\.[0-9]*\).*/\1/')
+  actual=$(./versions/$dep.sh | tr '[[:upper:]]' '[[:lower:]]' | sed -e 's/v\([0-9]*\.[0-9]*\.[0-9]*\).*/\1/')
+  # echo "--------------------------"
+  # echo "$dep: $expected : $actual"
   if [[ -n "$actual" ]]; then
     if [[ "$actual" =~ $expected ]]; then
     # if [[ "$expected" =~ $actual ]]; then
