@@ -13,6 +13,7 @@ kubectx 0.9.4
 kustomize 4.2.0
 rclone 1.55.1
 shellcheck 0.7.2
+shfmt 3.3.0
 terraform 0.12.30
 terraform latest
 tflint 0.30.0
