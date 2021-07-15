@@ -15,6 +15,5 @@ rclone 1.55.1
 shellcheck 0.7.2
 terraform 0.12.30
 terraform latest
-terragrunt 0.31.0
 tflint 0.30.0
 yq v4.9.3
