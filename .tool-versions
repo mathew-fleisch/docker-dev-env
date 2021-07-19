@@ -1,7 +1,7 @@
 awscli 2.2.20
 bat 0.18.2
 bats v1.3.0
-dust 0.6.0
+dust 0.6.1
 fzf 0.27.2
 gcloud 348.0.0
 golang 1.16.6
