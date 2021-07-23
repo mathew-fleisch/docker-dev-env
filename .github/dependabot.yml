@@ -2,7 +2,7 @@ version: 2
 registries:
   dockerhub:
     type: docker-registry
-    url: ${{ secrets.REGISTRY_URL }}
+    url: https://registry.hub.docker.com
     username: ${{ secrets.REGISTRY_USERNAME }}
     password: ${{ secrets.REGISTRY_PASSWORD }}
 
