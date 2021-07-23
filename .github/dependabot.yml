@@ -2,9 +2,9 @@ version: 2
 registries:
   dockerhub:
     type: docker-registry
-    url: registry.hub.docker.com
-    username: ${{secrets.REGISTRY_USERNAME}}}
-    password: ${{secrets.REGISTRY_PASSWORD}}
+    url: ${{ secrets.REGISTRY_URL }}
+    username: ${{ secrets.REGISTRY_USERNAME }}
+    password: ${{ secrets.REGISTRY_PASSWORD }}
 
 updates:
   - package-ecosystem: "docker"
