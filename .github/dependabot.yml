@@ -12,4 +12,4 @@ updates:
     registries:
       - dockerhub
     schedule:
-      interval: "monthly"
+      interval: "daily"
