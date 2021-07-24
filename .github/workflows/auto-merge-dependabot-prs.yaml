@@ -6,7 +6,7 @@ on:
 
 jobs:
   auto-merge:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: ahmadnassri/action-dependabot-auto-merge@v2
@@ -16,7 +16,9 @@ jobs:
         name: Git tag to trigger build
         run: |
           currentTag=$(git tag --list | sort -V | tail -1)
-          newTag=$(semver bump patch $currentTag)
+          wget https://raw.githubusercontent.com/fsaintjacques/semver-tool/master/src/semver -O ./semver \
+          chmod +x ./semver
+          newTag=$(./semver bump patch $currentTag)
           git tag "v${newTag}"
           git push origin "v${newTag}"
 
