@@ -18,7 +18,10 @@ jobs:
           currentTag=$(git tag --list | sort -V | tail -1)
           wget https://raw.githubusercontent.com/fsaintjacques/semver-tool/master/src/semver -O ./semver
           chmod +x ./semver
+          ./semver --version
+          echo "Current Tag: $currentTag"
           newTag=$(./semver bump patch $currentTag)
+          echo "New Tag: $newTag"
           git tag "v${newTag}"
           git push origin "v${newTag}"
 
