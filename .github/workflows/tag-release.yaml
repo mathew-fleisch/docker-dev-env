@@ -6,7 +6,7 @@ name: Release docker-dev-env
 on:
   push:
     tags:
-      - 'v*'
+      - 'disabled*'
 jobs:
   build:
     name: Release docker-dev-env
