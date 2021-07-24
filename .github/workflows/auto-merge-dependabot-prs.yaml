@@ -15,10 +15,7 @@ jobs:
       -
         name: Git tag to trigger build
         run: |
-          git fetch --all
-          git tag --list
-          pwd
-          ls -alF
+          git fetch --tags
           currentTag=$(git tag --list | sort -V | tail -1)
           wget https://raw.githubusercontent.com/fsaintjacques/semver-tool/master/src/semver -O ./semver
           chmod +x ./semver
