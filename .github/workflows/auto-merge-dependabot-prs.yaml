@@ -12,3 +12,11 @@ jobs:
       - uses: ahmadnassri/action-dependabot-auto-merge@v2
         with:
           github-token: ${{ secrets.GIT_TOKEN }}
+      -
+        name: Git tag to trigger build
+        run: |
+          currentTag=$(git describe --tags)
+          newTag=$(semver bump patch $currentTag)
+          git tag "v${newTag}"
+          git push origin "v${newTag}"
+
