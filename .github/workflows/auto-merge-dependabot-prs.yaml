@@ -15,6 +15,7 @@ jobs:
       -
         name: Git tag to trigger build
         run: |
+          git fetch --all
           git tag --list
           pwd
           ls -alF
