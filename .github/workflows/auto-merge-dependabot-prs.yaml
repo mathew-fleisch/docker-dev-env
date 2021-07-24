@@ -16,7 +16,7 @@ jobs:
         name: Git tag to trigger build
         run: |
           currentTag=$(git tag --list | sort -V | tail -1)
-          wget https://raw.githubusercontent.com/fsaintjacques/semver-tool/master/src/semver -O ./semver \
+          wget https://raw.githubusercontent.com/fsaintjacques/semver-tool/master/src/semver -O ./semver
           chmod +x ./semver
           newTag=$(./semver bump patch $currentTag)
           git tag "v${newTag}"
