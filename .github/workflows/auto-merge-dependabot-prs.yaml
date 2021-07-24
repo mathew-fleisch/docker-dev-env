@@ -27,5 +27,5 @@ jobs:
           newTag=$(./semver bump patch $currentTag)
           echo "New Tag: $newTag"
           git tag "v${newTag}"
-          git push origin "v${newTag}"
+          git push origin "v${newTag}" --follow-tags
 
