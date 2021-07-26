@@ -15,7 +15,6 @@ jobs:
       -
         name: Git tag to trigger build
         run: |
-          date > generated.txt
           git config user.name github-actions
           git config user.email github-actions@github.com
           git fetch --tags
