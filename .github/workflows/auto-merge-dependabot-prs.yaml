@@ -7,33 +7,41 @@ on:
   pull_request:
     types: [opened, reopened]
 
+permissions:
+  pull-requests: write
+  contents: write
+
 jobs:
   auto-merge:
     name: Auto-Merge Dependabot PRs
     runs-on: linter
     if: ${{ github.actor == 'dependabot[bot]' }}
     steps:
+      - name: Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@v1.1.0
+        with:
+          github-token: "${{ secrets.GIT_TOKEN }}"
+
+      - name: Enable auto-merge for Dependabot PRs
+        run: gh pr merge --auto --merge "$PR_URL"
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+ 
       -
         name: Checkout
         uses: actions/checkout@v2
         with:
           ssh-key: ${{ secrets.DOCKER_DEV_ENV_RW }}
+          ref: main
           fetch-depth: 0
-
-      -
-        name: Set this_branch environment variable
-        run: echo "this_branch=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
 
       -
         name: Git tag to trigger build
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          echo "Merge $this_branch -> main"
-          git checkout main
-          git pull origin main
-          git merge $this_branch
-          git push origin main
           echo "Download semver tool"
           git fetch --tags
           currentTag=$(git tag --list | sort -V | tail -1)
