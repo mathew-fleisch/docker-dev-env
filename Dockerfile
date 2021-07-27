@@ -13,4 +13,4 @@ RUN . ${ASDF_DATA_DIR}/asdf.sh  \
     && echo "$(while IFS= read -r line; do asdf plugin add $(echo $line | awk '{print $1}'); done < .tool-versions)" \
     && asdf install
 
-CMD /bin/bash -c '. ${ASDF_DATA_DIR}/asdf.sh && /bin/bash'
+CMD /bin/bash -c '. ${ASDF_DATA_DIR}/asdf.sh && for plugin in $(asdf plugin list); do asdf global $plugin $(asdf list $plugin | sort -V | tail -1); done && /bin/bash'
