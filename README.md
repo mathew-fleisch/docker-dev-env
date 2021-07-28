@@ -1,6 +1,6 @@
 # Docker Development Environment
 
-[![Release CI: multi-arch container build & push](https://github.com/mathew-fleisch/docker-dev-env/actions/workflows/tag-release.yaml/badge.svg)](https://github.com/mathew-fleisch/docker-dev-env/actions/workflows/tag-release.yaml)
+[![Release CI: multi-arch container build & push](https://github.com/mathew-fleisch/docker-dev-env/actions/workflows/build-container.yaml/badge.svg)](https://github.com/mathew-fleisch/docker-dev-env/actions/workflows/build-container.yaml)
 [![Update CI: asdf dependency versions](https://github.com/mathew-fleisch/docker-dev-env/actions/workflows/update-asdf-versions.yaml/badge.svg)](https://github.com/mathew-fleisch/docker-dev-env/actions/workflows/update-asdf-versions.yaml)
 [Docker Hub](https://hub.docker.com/r/mathewfleisch/docker-dev-env/tags?page=1&ordering=last_updated)
 
@@ -61,7 +61,7 @@ Built on top of [ubuntu:20.04](https://hub.docker.com/layers/ubuntu/library/ubun
 
 There are [two github-action jobs](https://github.com/mathew-fleisch/docker-dev-env/actions) set up to build, push and update the container and dependencies baked into the container. These jobs are configured to run on self-hosted runners and will use the docker plugin, buildx, to build multi-arch containers.
 
-***[Release on git tags (tag-release.yaml)](.github/workflows/tag-release.yaml)***
+***[Release on git tags (build-container.yaml)](.github/workflows/build-container.yaml)***
 
 The main branch is used to `git tag` stable versions and trigger a build+push to docker hub.
 
@@ -74,5 +74,5 @@ On new major/minor versions of of this tag, the apt dependencies will be upgrade
 
 ***[Automatic dependency updates (update-asdf-versions.yaml)](.github/workflows/update-asdf-versions.yaml)***
 
-This github action is triggered via [cron](.github/workflows/update-asdf-versions.yaml#L10) will use asdf to update the versions in [.tool-versions](.tool-versions), ignoring those tools pinned in [pin](pin), and trigger a new `git tag` patch, if [.tool-versions](.tool-versions) changes (the tag triggers the [tag-release.yaml](.github/workflows/tag-release.yaml) action).
+This github action is triggered via [cron](.github/workflows/update-asdf-versions.yaml#L10) will use asdf to update the versions in [.tool-versions](.tool-versions), ignoring those tools pinned in [pin](pin), and trigger a new `git tag` patch, if [.tool-versions](.tool-versions) changes (the tag triggers the [build-container.yaml](.github/workflows/build-container.yaml) action).
 
