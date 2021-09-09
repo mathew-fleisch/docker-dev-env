@@ -18,11 +18,10 @@ jobs:
     steps:
       - name: "Update asdf versions"
         env:
-          REPO_EMAIL: ${{ secrets.REPO_EMAIL }}
           GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
-          REPO_OWNER: "mathew-fleisch"
-          REPO_NAME: "docker-dev-env"
-          REPO_BRANCH: "main"
+          REPO_OWNER: mathew-fleisch
+          REPO_NAME: docker-dev-env
+          REPO_BRANCH: main
         # See the tools repo for more information: https://github.com/mathew-fleisch/tools
         run: wget -qO- https://raw.githubusercontent.com/mathew-fleisch/tools/main/scripts/update-asdf-to-latest.sh | bash
 
