@@ -13,7 +13,9 @@ permissions:
 jobs:
   auto-merge:
     name: Auto-Merge Dependabot PRs
-    runs-on: linter
+    runs-on:
+      - self-hosted
+      - linter
     if: ${{ github.actor == 'dependabot[bot]' }}
     steps:
       - name: Dependabot metadata
@@ -30,11 +32,18 @@ jobs:
  
       -
         name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           ssh-key: ${{ secrets.DOCKER_DEV_ENV_RW }}
           ref: main
           fetch-depth: 0
+
+      -
+        name: Install stuff with asdf
+        uses: asdf-vm/actions/install@v1
+        with:
+          tool_versions: |
+            semver 3.3.0
 
       -
         name: Git tag to trigger build
@@ -44,10 +53,8 @@ jobs:
           echo "Download semver tool"
           git fetch --tags
           currentTag=$(git tag --list | sort -V | tail -1)
-          wget https://raw.githubusercontent.com/fsaintjacques/semver-tool/master/src/semver -O ./semver
-          chmod +x ./semver
-          ./semver --version
-          newTag=$(./semver bump patch $currentTag)
+          semver --version
+          newTag=$(semver bump patch $currentTag)
           echo "From: $currentTag -> To: $newTag"
           git tag "v${newTag}"
           git push origin "v${newTag}" --follow-tags

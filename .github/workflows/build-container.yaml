@@ -10,12 +10,15 @@ on:
 
 jobs:
   build:
+    timeout-minutes: 120
     name: Build and Push Container
-    runs-on: generic-runner
+    runs-on:
+      - self-hosted
+      - generic-runner
     steps:
       -
         name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - 
@@ -44,7 +47,9 @@ jobs:
           push: true
           context: .
           platforms: linux/amd64,linux/arm64
-          tags: mathewfleisch/docker-dev-env:latest,mathewfleisch/docker-dev-env:${{ env.RELEASE_VERSION }}
+          tags: |
+            mathewfleisch/docker-dev-env:latest
+            mathewfleisch/docker-dev-env:${{ env.RELEASE_VERSION }}
           cache-from: type=registry,ref=mathewfleisch/docker-dev-env:latest
           cache-to: type=inline
 
