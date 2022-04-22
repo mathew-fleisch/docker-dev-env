@@ -1,4 +1,4 @@
-FROM mathewfleisch/tools:v0.1.57
+FROM mathewfleisch/tools:v0.2.0
 LABEL maintainer="Mathew Fleisch <mathew.fleisch@gmail.com>"
 
 ENV ASDF_DATA_DIR /opt/asdf
@@ -9,8 +9,7 @@ WORKDIR /root
 COPY .tool-versions ./.tool-versions
 COPY pin ./pin
 RUN . ${ASDF_DATA_DIR}/asdf.sh  \
-    && asdf update \
-    && echo "$(while IFS= read -r line; do asdf plugin add $(echo $line | awk '{print $1}'); done < .tool-versions)" \
+    && cat .tool-versions | awk '{print $1}' | sort | uniq | xargs -I {} asdf plugin add {} || true \
     && asdf install
 
-CMD /bin/bash -c '. ${ASDF_DATA_DIR}/asdf.sh && for plugin in $(asdf plugin list); do asdf global $plugin $(asdf list $plugin | sort -V | tail -1); done && /bin/bash'
+CMD /bin/bash -c '. ${ASDF_DATA_DIR}/asdf.sh && /bin/bash'
