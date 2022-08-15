@@ -1,4 +1,4 @@
-FROM mathewfleisch/tools:v0.2.15
+FROM mathewfleisch/tools:v0.2.16
 LABEL maintainer="Mathew Fleisch <mathew.fleisch@gmail.com>"
 
 ENV ASDF_DATA_DIR /opt/asdf
